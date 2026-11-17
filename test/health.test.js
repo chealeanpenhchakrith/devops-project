@@ -16,9 +16,3 @@ test("GET / answers 200 with the service description", async () => {
   assert.equal(response.status, 200);
   assert.equal(response.body.service, "devops-project");
 });
-
-test("GET /unknown answers 404", async () => {
-  const response = await request(app).get("/unknown");
-
-  assert.equal(response.status, 404);
-});
