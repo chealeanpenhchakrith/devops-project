@@ -21,10 +21,13 @@ Lightweight multi-stage build: 199 MB
 Full single-stage build: 1.58 GB
 
 3.2
-![img.png](img.png)
+<img width="1903" height="898" alt="3 2" src="https://github.com/user-attachments/assets/e42be2e7-a3a3-4255-b6c4-ec7a04bd6979" />
+
 
 3.3
-![img_1.png](img_1.png)
+<img width="1864" height="891" alt="3 3" src="https://github.com/user-attachments/assets/4c45baa8-89d4-4f73-a276-a8941c3e1943" />
+
+
 
 The Alpine-based image is about 87% smaller than the full image. Its base contains
 fewer system packages and tools, which reduces storage and transfer requirements.
@@ -57,3 +60,7 @@ In this workflow, a failing test can stop the build image step from running, and
 skip the the publish job because of its failure. A failing check also stop merging if 
 Build and test is configured as a required status check
 on main.
+
+Link to the image published in the registry
+https://github.com/chealeanpenhchakrith/devops-project/pkgs/container/devops-project
+
