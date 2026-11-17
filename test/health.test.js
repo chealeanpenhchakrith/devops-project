@@ -14,5 +14,5 @@ test("GET / answers 200 with the service description", async () => {
   const response = await request(app).get("/");
 
   assert.equal(response.status, 200);
-  assert.equal(response.body.service, "devops-project");
+  assert.equal(response.text, "Hello World from version 2");
 });
