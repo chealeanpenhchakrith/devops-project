@@ -7,9 +7,11 @@ namespace: prod
 resources:
   - ../../base
 
-commonLabels:
-  env: prod
-  cloud: cloud-b
+labels:
+  - pairs:
+      env: prod
+      cloud: cloud-b
+    includeSelectors: true
 
 replicas:
   - name: myapp

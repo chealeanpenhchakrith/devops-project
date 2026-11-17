@@ -1,13 +1,14 @@
 # devops-project
 
-Minimal Node.js API used for **ST2DCE - DevOps and Continuous Deployment, Lab 1**
-(Git workflow, Docker, GitHub Actions CI, image published to GHCR).
+Minimal Node.js API used for **ST2DCE - DevOps and Continuous Deployment**, Lab 1
+(Git workflow, Docker, GitHub Actions CI, image published to GHCR) and Lab 2
+(Kubernetes deployment with Kustomize overlays, rolling update, audit trail).
 
 The service exposes:
 
 | Route     | Answer                                        |
 |-----------|-----------------------------------------------|
-| `GET /`   | `200` + `{"service":"devops-project","version":"1.0.0"}` |
+| `GET /`   | `200` + `{"service":"devops-project","version":"1.1.0","env":"<APP_ENV>"}` |
 | `GET /health` | `200` + `OK` (plain text)                 |
 
 ## Stack
@@ -28,7 +29,8 @@ eslint.config.js            Lint configuration
 Dockerfile                  Single-stage image (step 2.1)
 Dockerfile.multistage       Multi-stage image (Bonus)
 .github/workflows/ci.yml    Build, test, publish pipeline
-ANSWERS.md                  Answers to the five lab questions
+k8s/                        Kubernetes base, overlays, RBAC and its own README
+ANSWERS.md                  Answers to the Lab 1 and Lab 2 questions
 ```
 
 ## Run locally
@@ -128,6 +130,28 @@ an account that has access to it and a token with the `read:packages` scope.
 echo $GITHUB_TOKEN | docker login ghcr.io -u <github-user> --password-stdin
 docker pull ghcr.io/chealeanpenhchakrith/devops-project:4b4ba17256b5a6f5f31c86f77a1e514d7b485266
 ```
+
+## Kubernetes (Lab 2)
+
+`k8s/` holds the deployment of this image on Kubernetes: a `base/` with the workload
+(Deployment with readiness/liveness probes on `/health`, resources, non-root
+securityContext, traceability annotations, and a `ClusterIP` Service 80 -> 3000) and
+three Kustomize overlays (`dev`, `staging`, `prod`) that only carry what differs:
+namespace, replica count, environment labels, `APP_ENV` and the image tag.
+
+```bash
+kubectl apply -f k8s/namespaces.yaml
+kubectl apply -k k8s/overlays/dev
+kubectl get all -n dev
+kubectl port-forward svc/myapp 8080:80 -n dev
+curl http://localhost:8080/        # {"service":"devops-project","version":"1.1.0","env":"dev"}
+kubectl rollout undo deployment/myapp -n prod
+```
+
+Details, commands and the measured evidence (self-healing, scaling, probe failure,
+rolling update, rollback, RBAC) are in [`k8s/README.md`](k8s/README.md) and
+[`evidence/`](evidence/). Version `1.1.0` of the application exposes `APP_ENV`, which
+is how a namespace can be identified from a single HTTP call.
 
 ## Lab evidence
 

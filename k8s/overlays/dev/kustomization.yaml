@@ -7,8 +7,10 @@ namespace: dev
 resources:
   - ../../base
 
-commonLabels:
-  env: dev
+labels:
+  - pairs:
+      env: dev
+    includeSelectors: true
 
 replicas:
   - name: myapp
@@ -16,7 +18,17 @@ replicas:
 
 images:
   - name: ghcr.io/chealeanpenhchakrith/devops-project
-    newTag: "4b4ba17256b5a6f5f31c86f77a1e514d7b485266"
+    newTag: "92423135c07f8fd5366a49a31ffa7824b7de07a9"
+
+# Keep the traceability annotation in sync with the image this overlay deploys
+patches:
+  - target:
+      kind: Deployment
+      name: myapp
+    patch: |-
+      - op: replace
+        path: /metadata/annotations/git-commit
+        value: 92423135c07f8fd5366a49a31ffa7824b7de07a9
 
 configMapGenerator:
   - name: myapp-config

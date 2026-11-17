@@ -1,0 +1,53 @@
+# kubectl get all in each namespace (kind cluster devops-lab)
+
+## namespace dev
+NAME                         READY   STATUS    RESTARTS   AGE
+pod/myapp-6dc87d5646-9khsg   1/1     Running   0          3m22s
+
+NAME            TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
+service/myapp   ClusterIP   10.96.160.4   <none>        80/TCP    7m20s
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/myapp   1/1     1            1           7m20s
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/myapp-558dc5fc86   0         0         0       5m41s
+replicaset.apps/myapp-56cf899548   0         0         0       7m20s
+replicaset.apps/myapp-6dc87d5646   1         1         1       4m33s
+
+
+## namespace staging
+NAME                         READY   STATUS    RESTARTS   AGE
+pod/myapp-795cbfd9d8-bjfvn   1/1     Running   0          26s
+pod/myapp-795cbfd9d8-fpdlx   1/1     Running   0          33s
+
+NAME            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)   AGE
+service/myapp   ClusterIP   10.96.215.252   <none>        80/TCP    7m20s
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/myapp   2/2     2            2           7m19s
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/myapp-75f996c7db   0         0         0       7m19s
+replicaset.apps/myapp-795cbfd9d8   2         2         2       33s
+
+
+## namespace prod
+NAME                         READY   STATUS    RESTARTS   AGE
+pod/myapp-5f967f59d5-ln54q   1/1     Running   0          15s
+pod/myapp-5f967f59d5-pzzcb   1/1     Running   0          33s
+pod/myapp-5f967f59d5-rxhjf   1/1     Running   0          27s
+pod/myapp-5f967f59d5-x47lg   1/1     Running   0          21s
+pod/myapp-5f967f59d5-xs4qm   1/1     Running   0          9s
+
+NAME            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+service/myapp   ClusterIP   10.96.44.192   <none>        80/TCP    7m18s
+
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/myapp   5/5     5            5           7m18s
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/myapp-5f967f59d5   5         5         5       7m18s
+replicaset.apps/myapp-7dcb8f7df9   0         0         0       2m26s
+replicaset.apps/myapp-89688cd68    0         0         0       104s
+

@@ -1,0 +1,10 @@
+list pods -n dev -> yes
+delete pods -n dev -> no
+get pods/log -n dev -> yes
+get secrets -n dev -> no
+list pods -n prod -> no
+git-commit: 4b4ba17256b5a6f5f31c86f77a1e514d7b485266
+{"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"git-commit":"4b4ba17256b5a6f5f31c86f77a1e514d7b485266","owner":"team-a","pipeline-run-url":"https://github.com/chealeanpenhchakrith/devops-project/actions/runs/44057532758","ticket":"OPS-123"},"labels":{"app":"myapp","cloud":"cloud-b","env":"prod"},"name":"myapp","namespace":"prod"},"spec":{"replicas":5,"selector":{"matchLabels":{"app":"myapp","cloud":"cloud-b","env":"prod"}},"strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0},"type":"RollingUpdate"},"template":{"metadata":{"labels":{"app":"myapp","cloud":"cloud-b","env":"prod"}},"spec":{"containers":[{"envFrom":[{"configMapRef":{"name":"myapp-config"}},{"secretRef":{"name":"myapp-secret"}}],"image":"ghcr.io/chealeanpenhchakrith/devops-project:4b4ba17256b5a6f5f31c86f77a1e514d7b485266","imagePullPolicy":"IfNotPresent","livenessProbe":{"failureThreshold":3,"httpGet":{"path":"/health","port":3000},"initialDelaySeconds":10,"periodSeconds":10,"timeoutSeconds":2},"name":"myapp","ports":[{"containerPort":3000}],"readinessProbe":{"failureThreshold":2,"httpGet":{"path":"/health","port":3000},"initialDelaySeconds":2,"periodSeconds":5,"timeoutSeconds":2},"resources":{"limits":{"cpu":"500m","memory":"256Mi"},"requests":{"cpu":"100m","memory":"128Mi"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]}}}],"imagePullSecrets":[{"name":"ghcr-pull"}],"securityContext":{"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000}}}}}
+owner: team-a
+pipeline-run-url: https://github.com/chealeanpenhchakrith/devops-project/actions/runs/44057532758
+ticket: OPS-123

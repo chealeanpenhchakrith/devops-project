@@ -1,0 +1,47 @@
+# Rolling update - no downtime
+
+Image change measured from **inside the cluster** (a pod in `dev` calling
+`http://myapp.prod.svc.cluster.local/health`, and a pod in `prod` calling
+`http://myapp.dev.svc.cluster.local/health`) every 200 ms while the Deployment was
+re-applied with a new image tag.
+
+## prod: 5 replicas, 4b4ba17 (v1.0.0) -> 9242313 (v1.1.0)
+
+```
+ok=222 fail=0 duration=45013ms
+```
+
+No request failed: with `maxSurge: 1` / `maxUnavailable: 0` the new pod becomes Ready
+before an old one is removed, so the Service always had at least 5 ready endpoints.
+
+## dev: 1 replica, 4b4ba17 -> 9242313
+
+```
+ok=168 fail=2 duration=45043ms
+```
+
+Two failures out of 170 requests (~1.2%). With a single replica, the moment the last
+old pod is terminated and the new one is the only endpoint, one or two in-flight
+requests can hit an endpoint that is being removed (endpoint propagation is not
+instantaneous). This is the expected cost of running one replica; the lab base of 3
+replicas, and prod with 5, show zero lost requests.
+
+Conclusion for the report: the rolling update with `maxUnavailable: 0` prevents the
+*planned* downtime of a restart (all pods are never replaced at once), but a
+single-replica environment can still lose a request during the endpoint switch - which
+is itself an argument for running several replicas in production.
+
+## How it was measured
+
+```bash
+# probe script executed inside a running pod (node 20 has fetch)
+kubectl exec -i -n dev <pod> -- node < evidence/probe-during-rollout.js
+
+# meanwhile, in another shell
+kubectl apply -k k8s/overlays/prod     # after changing newTag in the overlay
+kubectl rollout status deployment/myapp -n prod
+```
+
+`kubectl port-forward svc/myapp` was **not** used for this measurement: a port-forward
+is bound to a single pod and dies when that pod is replaced, which would report a fake
+downtime.

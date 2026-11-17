@@ -1,0 +1,4 @@
+# port-forward svc/myapp 8080:80 -n dev
+
+GET /       -> {"service":"devops-project","version":"1.1.0","env":"dev"}
+GET /health -> OK (200)
