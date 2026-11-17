@@ -89,12 +89,18 @@ none of which is needed at runtime.
 
 ## Protected `main`
 
-`main` must stay releasable, so two GitHub rules are expected on it
-(*Settings -> Rules / Branches*):
+`main` must stay releasable, so two GitHub rules apply to it
+(*Settings -> Branches -> Add branch protection rule*, pattern `main`):
 
-1. **Require a pull request before merging** - no direct push to `main`.
-2. **Require status checks to pass** - the `build-test` job is required, so a red
-   pipeline blocks the merge button.
+1. **Require a pull request before merging** - no direct push to `main`
+   (1 approval, and "Dismiss stale pull request approvals").
+2. **Require status checks to pass** - add `Build and test` as a required check, so
+   a red pipeline blocks the merge button.
+
+> Repository-owner action: only an administrator of the repository can enable these
+> rules (GitHub returns `404` to non-admins). The pipeline and the branch are already
+> ready for them: the check appears as `Build and test` in the branch protection
+> picker once the workflow has run at least once.
 
 The resulting flow is: branch -> commit -> push -> Pull Request -> automated
 CI + review -> merge -> `publish` job -> image in GHCR tagged with the commit SHA.
@@ -104,8 +110,29 @@ CI + review -> merge -> `publish` job -> image in GHCR tagged with the commit SH
 One commit SHA identifies the whole chain:
 
 ```
-commit 695de3f  ->  CI run  ->  ghcr.io/chealeanpenhchakrith/devops-project:695de3f...
+commit 4b4ba17  ->  CI run #4  ->  ghcr.io/chealeanpenhchakrith/devops-project:4b4ba17...
 ```
 
-`docker pull ghcr.io/chealeanpenhchakrith/devops-project:<commit-sha>` reproduces
-exactly the image built from that commit.
+The image published from `main` is:
+
+```
+ghcr.io/chealeanpenhchakrith/devops-project:4b4ba17256b5a6f5f31c86f77a1e514d7b485266
+```
+
+Because the repository is private, the package is private too: `docker pull` requires
+an account that has access to it and a token with the `read:packages` scope.
+
+```bash
+echo $GITHUB_TOKEN | docker login ghcr.io -u <github-user> --password-stdin
+docker pull ghcr.io/chealeanpenhchakrith/devops-project:4b4ba17256b5a6f5f31c86f77a1e514d7b485266
+```
+
+## Lab evidence
+
+| Evidence | Link |
+|---|---|
+| Failing pipeline (test broken on purpose, `Build image` and `publish` skipped) | https://github.com/chealeanpenhchakrith/devops-project/actions/runs/44053350956 |
+| Passing pipeline on the pull request | https://github.com/chealeanpenhchakrith/devops-project/actions/runs/44053249163 |
+| Passing pipeline on `main` (build-test + publish to GHCR) | https://github.com/chealeanpenhchakrith/devops-project/actions/runs/44053709282 |
+| Pull Request that delivered this work | https://github.com/chealeanpenhchakrith/devops-project/pull/2 |
+| Published image | https://github.com/chealeanpenhchakrith/devops-project/pkgs/container/devops-project |
