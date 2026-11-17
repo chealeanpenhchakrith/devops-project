@@ -2,6 +2,7 @@ import express from "express";
 
 const app = express();
 
+// Test endpoint
 app.get("/health", (req, res) => {
   res.send("OK");
 });
