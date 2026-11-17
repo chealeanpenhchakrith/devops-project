@@ -7,7 +7,7 @@ test('GET /health answers 200 with OK', async () => {
   const response = await request(app).get('/health');
 
   assert.equal(response.status, 200);
-  assert.equal(response.text, 'KO');
+  assert.equal(response.text, 'OK');
 });
 
 test('GET / answers 200 with the service description', async () => {
