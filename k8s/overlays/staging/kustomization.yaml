@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Staging environment: cloud A, 2 replicas, same release as production.
+namespace: staging
+
+resources:
+  - ../../base
+
+commonLabels:
+  env: staging
+  cloud: cloud-a
+
+replicas:
+  - name: myapp
+    count: 2
+
+images:
+  - name: ghcr.io/chealeanpenhchakrith/devops-project
+    newTag: "4b4ba17256b5a6f5f31c86f77a1e514d7b485266"
+
+configMapGenerator:
+  - name: myapp-config
+    behavior: merge
+    literals:
+      - APP_ENV=staging

@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Development environment: on-prem / local kind, 1 replica, movable tag.
+namespace: dev
+
+resources:
+  - ../../base
+
+commonLabels:
+  env: dev
+
+replicas:
+  - name: myapp
+    count: 1
+
+images:
+  - name: ghcr.io/chealeanpenhchakrith/devops-project
+    newTag: "4b4ba17256b5a6f5f31c86f77a1e514d7b485266"
+
+configMapGenerator:
+  - name: myapp-config
+    behavior: merge
+    literals:
+      - APP_ENV=dev
