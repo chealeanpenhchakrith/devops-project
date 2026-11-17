@@ -1,4 +1,4 @@
-import app from './app.js';
+import app from "./app.js";
 
 const port = Number(process.env.PORT) || 3000;
 
@@ -11,5 +11,5 @@ function shutdown(signal) {
   server.close(() => process.exit(0));
 }
 
-process.on('SIGTERM', () => shutdown('SIGTERM'));
-process.on('SIGINT', () => shutdown('SIGINT'));
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("SIGINT", () => shutdown("SIGINT"));

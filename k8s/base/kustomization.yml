@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment.yml
+  - service.yml
+
+configMapGenerator:
+  - name: myapp-config
+    literals:
+      - APP_ENV=dev
+
+secretGenerator:
+  - name: myapp-secret
+    literals:
+      - API_KEY=changeme
