@@ -1,6 +1,6 @@
 {
   "name": "devops-project",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Minimal Node.js API with a /health endpoint - ST2DCE Lab 1",
   "main": "server.js",
   "type": "module",
