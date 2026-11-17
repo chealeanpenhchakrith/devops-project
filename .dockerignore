@@ -1,0 +1,17 @@
+node_modules
+npm-debug.log*
+coverage
+
+.git
+.github
+.gitignore
+.gitattributes
+
+test
+
+README.md
+ANSWERS.md
+
+Dockerfile
+Dockerfile.multistage
+.dockerignore

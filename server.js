@@ -1,12 +1,15 @@
-import express from "express";
+import app from './app.js';
 
-const app = express();
+const port = Number(process.env.PORT) || 3000;
 
-// Test endpoint
-app.get("/health", (req, res) => {
-  res.send("OK");
+const server = app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });
 
-app.listen(3000, () => {
-  console.log("Server is running on http://localhost:3000");
-});
+function shutdown(signal) {
+  console.log(`${signal} received, closing the server`);
+  server.close(() => process.exit(0));
+}
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
