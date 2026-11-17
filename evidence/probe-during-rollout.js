@@ -13,7 +13,7 @@ const limit = Number(process.env.PROBE_MS || 45000);
       } else {
         fail += 1;
       }
-    } catch (error) {
+    } catch {
       fail += 1;
     }
     await new Promise((resolve) => setTimeout(resolve, 200));
