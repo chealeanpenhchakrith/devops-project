@@ -89,18 +89,20 @@ none of which is needed at runtime.
 
 ## Protected `main`
 
-`main` must stay releasable, so two GitHub rules apply to it
-(*Settings -> Branches -> Add branch protection rule*, pattern `main`):
+`main` must stay releasable, so it is protected by two GitHub rules
+(*Settings -> Branches*, pattern `main`):
 
-1. **Require a pull request before merging** - no direct push to `main`
-   (1 approval, and "Dismiss stale pull request approvals").
-2. **Require status checks to pass** - add `Build and test` as a required check, so
-   a red pipeline blocks the merge button.
+1. **Require a pull request before merging** - no direct push to `main`;
+   **2 approvals** are required and approvals are dismissed when new commits land.
+2. **Require status checks to pass** - the `Build and test` job is required, so a red
+   pipeline blocks the merge button.
 
-> Repository-owner action: only an administrator of the repository can enable these
-> rules (GitHub returns `404` to non-admins). The pipeline and the branch are already
-> ready for them: the check appears as `Build and test` in the branch protection
-> picker once the workflow has run at least once.
+With two approvals on a team of three or four, at least two teammates must read the
+diff before anything reaches `main`; the author counts as a reviewer for nobody.
+
+> Only an administrator of the repository can change these rules (GitHub answers `404`
+> to everybody else, which is why this file documents them instead of asserting them
+> from CI). The check is listed as `Build and test` in the branch protection picker.
 
 The resulting flow is: branch -> commit -> push -> Pull Request -> automated
 CI + review -> merge -> `publish` job -> image in GHCR tagged with the commit SHA.
