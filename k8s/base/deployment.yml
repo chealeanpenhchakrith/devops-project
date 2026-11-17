@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: myapp
+          image: ghcr.io/chealeanpenhchakrith/devops-project:e3543460b308cdf56ddc4b5ac5aedfe6430561c7
+          ports:
+            - containerPort: 3000
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          resources:
+            requests:
+              memory: "64Mi"
+            limits:
+              memory: "128Mi"
+          env:
+            - name: APP_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: myapp-config
+                  key: APP_ENV
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: myapp-secret
+                  key: API_KEY
