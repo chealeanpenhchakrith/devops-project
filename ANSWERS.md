@@ -1,34 +1,33 @@
 # Lab 1 - Answers to Questions 1 to 5
 
 ## Question 1 - Why forbid direct pushes to main?
-
-Requiring Pull Requests lets the team review changes and run automated checks before
-merging them into main. This reduces the risk of breaking the shared application
-and keeps the discussion and validation linked to each change. Reviews and CI checks
-must be configured as required in the branch protection settings to enforce them.
+Pull requests allow team members to review changes before merging them into main. This
+avoid breaking the shared application and let us to trace the linked validation and 
+discussion. We have to configure required checks in the branch protection settings to
+enforce team to do ti.
 
 ## Question 2 - What is the difference between an image and a container?
 
-An image is a read-only template containing the application, its dependencies and
-its runtime configuration. A container is an instance created from that image, with
-its own writable layer; it can be running or stopped. Several containers can use
-the same image. Removing a container does not remove its image.
+An image is a template, it has the application, its dependencies and its runtime
+configuration. A container is an instance of the image, it has its own writable
+layer. Serveral containers can have the same image, and can be running or stopped
+independently.
 
 ## Question 3 - Compare the image size with a non-slim base image
 
 The sizes previously recorded for this project are:
-
-| Variant | Base image | Recorded size |
-|---|---|---|
-| Lightweight single-stage | node:20-alpine | 202 MB |
-| Lightweight multi-stage | node:20-alpine | 199 MB |
-| Full single-stage | node:20 | 1.58 GB |
+Lightweight single-stage build: 202 MB
+Lightweight multi-stage build: 199 MB
+Full single-stage build: 1.58 GB
 
 3.2
-![img.png](img.png)
+<img width="1903" height="898" alt="3 2" src="https://github.com/user-attachments/assets/e42be2e7-a3a3-4255-b6c4-ec7a04bd6979" />
+
 
 3.3
-![img_1.png](img_1.png)
+<img width="1864" height="891" alt="3 3" src="https://github.com/user-attachments/assets/4c45baa8-89d4-4f73-a276-a8941c3e1943" />
+
+
 
 The Alpine-based image is about 87% smaller than the full image. Its base contains
 fewer system packages and tools, which reduces storage and transfer requirements.
@@ -42,22 +41,26 @@ other build dependencies can be excluded from the final image.
 
 ## Question 4 - Why tag the image with the commit SHA rather than latest?
 
-A commit SHA tag links the image to a specific source revision. It makes it easier
-to trace a version through its commit, pipeline run and published image, and to
-select a previous version for rollback. In contrast, latest can point to a different
-version after each publication.
+A commit SHA tag builds a connection between an image and a specific source revision. 
+That makes it easier to trace a version through its commit, pipeline run and published 
+image. And it's also easier to select a previous version for rollback. The latest can 
+also point to a different version after each publication.
 
-A SHA-based tag is still a Docker tag and can be overwritten. An image digest
-(sha256:...) identifies the exact image content; rebuilding the same commit can
-produce a different image if its base image or other build inputs change.
+A SHA-based tag is a Docker tag , it can be overwritten. An image digest shows the 
+exact image content; The image can be different with inputs chage on its base image,
+even if we rebuild the same commit.
 
 ## Question 5 - What does fail fast mean in a pipeline?
 
-Fail fast means reporting a failure as early as possible and skipping subsequent
-steps that depend on its success. Cheap checks such as lint and tests run before
-more expensive operations such as building and publishing an image.
+It means being able to find a failure as early as possible and to skip subsequent steps
+that depend on its succes. Cheap checks like lint and tests always be done before more 
+expensive operations like building and publishing an image.
 
-In this workflow, a failing test prevents the Build image step from running, and
-the publish job is skipped because it needs build-test to succeed. A failing check
-also blocks merging when Build and test is configured as a required status check
+In this workflow, a failing test can stop the build image step from running, and we can 
+skip the the publish job because of its failure. A failing check also stop merging if 
+Build and test is configured as a required status check
 on main.
+
+Link to the image published in the registry
+https://github.com/chealeanpenhchakrith/devops-project/pkgs/container/devops-project
+
