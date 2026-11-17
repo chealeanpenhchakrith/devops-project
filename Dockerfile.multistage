@@ -1,0 +1,28 @@
+# Lab 1 / Bonus - multi-stage variant of the same image.
+# Stage "deps" installs the production dependencies, stage "runtime" keeps only
+# what is needed to run: no npm cache, no devDependencies, no build tooling.
+
+# --- Stage 1: dependencies -------------------------------------------------
+FROM node:20-alpine AS deps
+
+ENV NODE_ENV=production
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev && npm cache clean --force
+
+# --- Stage 2: runtime ------------------------------------------------------
+FROM node:20-alpine AS runtime
+
+ENV NODE_ENV=production
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY package.json ./
+COPY app.js server.js ./
+
+EXPOSE 3000
+
+USER node
+
+CMD ["node", "server.js"]
