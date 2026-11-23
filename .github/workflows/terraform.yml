@@ -20,3 +20,21 @@ jobs:
 
       - name: Validate configuration
         run: terraform -chdir=infra/envs/dev validate
+
+      - name: Initialize Terraform
+        run: terraform -chdir=infra/envs/dev init -input=false -backend-config="path=ci.tfstate"
+
+      - name: Generate Terraform plan
+        run: |
+          terraform -chdir=infra/envs/dev plan \
+            -input=false -no-color \
+            -var="env_name=dev" \
+            -var="image=nginx:1.27" \
+            -var="external_port=8083" \
+            > terraform-plan.txt
+
+      - name: Upload Terraform plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan
+          path: terraform-plan.txt
