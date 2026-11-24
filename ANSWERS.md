@@ -77,6 +77,15 @@ centralize without managing per-container files, rotation, or disk space. JSON
 provides structured fields such as timestamp, severity, route, and status, which
 can be searched and filtered reliably by log tools.
 
+# Lab 4 - Part 4 Answers
+
+## Question 4 - Why is the 95th percentile more informative than the average latency?
+
+The average can hide a slow tail: many fast requests can pull it down even while
+some users experience very slow responses. The p95 is the latency at or below which
+95% of requests complete, so it makes the slower 5% visible and is more useful for
+understanding user-facing latency and checking latency objectives.
+
 Link to the image published in the registry
 https://github.com/chealeanpenhchakrith/devops-project/pkgs/container/devops-project
 
