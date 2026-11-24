@@ -61,6 +61,22 @@ skip the the publish job because of its failure. A failing check also stop mergi
 Build and test is configured as a required status check
 on main.
 
+# Lab 4 - Part 1 Answers
+
+## Question 1 - Why not use a user ID or a full URL containing IDs as a metric label?
+
+Every distinct label value creates a separate Prometheus time series. User IDs and
+URLs containing resource IDs have many possible values, so they cause high
+cardinality, which increases Prometheus memory use, storage, and query cost. Use a
+normalized route such as `/users/:id` instead of `/users/12345`.
+
+## Question 2 - Why log JSON to stdout instead of plain text to a file?
+
+Container platforms and log collectors already capture stdout, making logs easy to
+centralize without managing per-container files, rotation, or disk space. JSON
+provides structured fields such as timestamp, severity, route, and status, which
+can be searched and filtered reliably by log tools.
+
 Link to the image published in the registry
 https://github.com/chealeanpenhchakrith/devops-project/pkgs/container/devops-project
 
