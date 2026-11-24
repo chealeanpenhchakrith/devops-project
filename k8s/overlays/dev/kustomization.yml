@@ -14,3 +14,7 @@ labels:
   - pairs:
       env: dev
     includeTemplates: true
+
+images:
+  - name: ghcr.io/chealeanpenhchakrith/devops-project
+    newTag: does-not-exist-lab-test
