@@ -86,6 +86,16 @@ some users experience very slow responses. The p95 is the latency at or below wh
 95% of requests complete, so it makes the slower 5% visible and is more useful for
 understanding user-facing latency and checking latency objectives.
 
+# Lab 4 - Part 5 Answers
+
+## Question 5 - What is alert fatigue, and how do `for:` and severity labels help?
+
+Alert fatigue occurs when responders receive too many noisy or low-value alerts and
+start ignoring them, which can delay action on real incidents. The `for: 2m` clause
+filters out brief spikes by requiring the condition to persist before firing. A
+severity label helps route and prioritize alerts according to their impact, so
+critical incidents receive the appropriate attention.
+
 Link to the image published in the registry
 https://github.com/chealeanpenhchakrith/devops-project/pkgs/container/devops-project
 
