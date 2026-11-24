@@ -96,6 +96,30 @@ filters out brief spikes by requiring the condition to persist before firing. A
 severity label helps route and prioritize alerts according to their impact, so
 critical incidents receive the appropriate attention.
 
+# Lab 4 - Part 6 Answers
+
+## Question 6 - Why mitigate before finding the root cause?
+
+Mitigating first limits the ongoing impact and restores service using a known-good
+version. Root-cause analysis can take longer, and leaving the faulty version active
+while investigating can cause more failed requests. After service is stable, the team
+can investigate the cause while preserving logs and monitoring data.
+
+## Question 7 - Why must a postmortem be blameless? Give a blameless rewording of “Alex deployed a bad version”.
+
+A blameless postmortem helps people report what happened honestly and directs the
+discussion toward conditions and process gaps that can be improved, rather than
+assigning fault to one person. A blameless rewording is: “A faulty version was
+deployed without a business-route smoke test or rollout guard that could have
+detected the increased 5xx rate.”
+
+## Question 8 - Propose two concrete pipeline changes that would have prevented or limited this incident.
+
+1. Add a post-deployment smoke test that calls `/` and requires HTTP 200 before the
+   pipeline marks the release successful. A failure should stop promotion.
+2. Use a canary rollout with a Prometheus error-rate gate. If the 5xx ratio remains
+   above 10% for two minutes, stop the rollout and automatically roll back.
+
 Link to the image published in the registry
 https://github.com/chealeanpenhchakrith/devops-project/pkgs/container/devops-project
 
