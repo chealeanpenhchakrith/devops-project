@@ -3,11 +3,22 @@ import app from "./app.js";
 const port = Number(process.env.PORT) || 3000;
 
 const server = app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(JSON.stringify({
+    timestamp: new Date().toISOString(),
+    level: "info",
+    message: "Server started",
+    port,
+  }));
 });
 
 function shutdown(signal) {
-  console.log(`${signal} received, closing the server`);
+  console.log(JSON.stringify({
+    timestamp: new Date().toISOString(),
+    level: "info",
+    message: "Server shutting down",
+    signal,
+  }));
+
   server.close(() => process.exit(0));
 }
 
