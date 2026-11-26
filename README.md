@@ -7,8 +7,11 @@ The service exposes:
 
 | Route     | Answer                                        |
 |-----------|-----------------------------------------------|
-| `GET /`   | `200` + `{"service":"devops-project","version":"1.0.0"}` |
+| `GET /`   | `200` + `Hello World from version 2` |
 | `GET /health` | `200` + `OK` (plain text)                 |
+| `GET /metrics` | Prometheus metrics for the process and HTTP requests |
+| `GET /slow` | Waits for a random duration up to 2 seconds |
+| `GET /error` | Returns HTTP 500 about 30% of the time |
 
 ## Stack
 
@@ -39,6 +42,20 @@ npm test          # 3 tests
 npm run lint
 npm start         # http://localhost:3000
 ```
+
+For Lab 4 Part 1, generate traffic and inspect the metrics endpoint:
+
+```bash
+curl http://localhost:3000/
+curl http://localhost:3000/slow
+curl http://localhost:3000/error
+curl http://localhost:3000/metrics
+```
+
+HTTP request metrics use the normalized Express route as a label, so dynamic URL
+values do not create unbounded Prometheus time series. Request logs are emitted as
+JSON to stdout for container log collection. The existing GitHub Actions workflow
+builds images tagged with the commit SHA and publishes them to GHCR on `main`.
 
 ## Run with Docker
 

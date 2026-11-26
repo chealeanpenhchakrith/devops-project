@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: myapp-alerts
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: myapp
+      rules:
+        - alert: HighErrorRate
+          expr: |
+            sum(rate(http_requests_total{namespace="dev",status=~"5.."}[2m]))
+            / sum(rate(http_requests_total{namespace="dev"}[2m])) > 0.10
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "MyApp HTTP 5xx error ratio is above 10%"
+            description: "The 5xx ratio for MyApp in namespace dev has exceeded 10% for at least 2 minutes."
+            runbook: "https://github.com/chealeanpenhchakrith/devops-project/blob/main/docs/runbook.md"

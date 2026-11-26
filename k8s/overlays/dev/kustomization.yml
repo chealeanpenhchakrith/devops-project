@@ -17,4 +17,5 @@ labels:
 
 images:
   - name: ghcr.io/chealeanpenhchakrith/devops-project
-    newTag: does-not-exist-lab-test
+    newName: devops-project
+    newTag: lab4

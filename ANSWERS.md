@@ -61,6 +61,65 @@ skip the the publish job because of its failure. A failing check also stop mergi
 Build and test is configured as a required status check
 on main.
 
+# Lab 4 - Part 1 Answers
+
+## Question 1 - Why not use a user ID or a full URL containing IDs as a metric label?
+
+Every distinct label value creates a separate Prometheus time series. User IDs and
+URLs containing resource IDs have many possible values, so they cause high
+cardinality, which increases Prometheus memory use, storage, and query cost. Use a
+normalized route such as `/users/:id` instead of `/users/12345`.
+
+## Question 2 - Why log JSON to stdout instead of plain text to a file?
+
+Container platforms and log collectors already capture stdout, making logs easy to
+centralize without managing per-container files, rotation, or disk space. JSON
+provides structured fields such as timestamp, severity, route, and status, which
+can be searched and filtered reliably by log tools.
+
+# Lab 4 - Part 4 Answers
+
+## Question 4 - Why is the 95th percentile more informative than the average latency?
+
+The average can hide a slow tail: many fast requests can pull it down even while
+some users experience very slow responses. The p95 is the latency at or below which
+95% of requests complete, so it makes the slower 5% visible and is more useful for
+understanding user-facing latency and checking latency objectives.
+
+# Lab 4 - Part 5 Answers
+
+## Question 5 - What is alert fatigue, and how do `for:` and severity labels help?
+
+Alert fatigue occurs when responders receive too many noisy or low-value alerts and
+start ignoring them, which can delay action on real incidents. The `for: 2m` clause
+filters out brief spikes by requiring the condition to persist before firing. A
+severity label helps route and prioritize alerts according to their impact, so
+critical incidents receive the appropriate attention.
+
+# Lab 4 - Part 6 Answers
+
+## Question 6 - Why mitigate before finding the root cause?
+
+Mitigating first limits the ongoing impact and restores service using a known-good
+version. Root-cause analysis can take longer, and leaving the faulty version active
+while investigating can cause more failed requests. After service is stable, the team
+can investigate the cause while preserving logs and monitoring data.
+
+## Question 7 - Why must a postmortem be blameless? Give a blameless rewording of “Alex deployed a bad version”.
+
+A blameless postmortem helps people report what happened honestly and directs the
+discussion toward conditions and process gaps that can be improved, rather than
+assigning fault to one person. A blameless rewording is: “A faulty version was
+deployed without a business-route smoke test or rollout guard that could have
+detected the increased 5xx rate.”
+
+## Question 8 - Propose two concrete pipeline changes that would have prevented or limited this incident.
+
+1. Add a post-deployment smoke test that calls `/` and requires HTTP 200 before the
+   pipeline marks the release successful. A failure should stop promotion.
+2. Use a canary rollout with a Prometheus error-rate gate. If the 5xx ratio remains
+   above 10% for two minutes, stop the rollout and automatically roll back.
+
 Link to the image published in the registry
 https://github.com/chealeanpenhchakrith/devops-project/pkgs/container/devops-project
 
